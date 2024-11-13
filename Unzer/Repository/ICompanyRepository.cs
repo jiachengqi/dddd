@@ -1,0 +1,16 @@
+﻿using System;
+using Unzer.Data;
+
+namespace Unzer.Repository
+{
+    public interface ICompanyRepository
+    {
+        Task<IEnumerable<Company>> GetCompaniesAsync();
+        Task<Company> GetCompanyByIdAsync(int id);
+        Task CreateCompanyAsync(Company company);
+        Task UpdateCompanyAsync(Company company);
+        Task AddOwnersAsync(int companyId, IEnumerable<Owner> owners);
+        Task<Owner> GetOwnerByIdAsync(int companyId, int ownerId);
+    }
+}
+
