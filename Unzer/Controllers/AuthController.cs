@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Unzer.Data;
+using Unzer.ExceptionHandling;
+using Unzer.Service;
 using Unzer.Util;
 
 namespace Unzer.Controllers
@@ -9,24 +11,44 @@ namespace Unzer.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
+        private readonly IAuthService _authService;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(IConfiguration configuration)
+        public AuthController(IAuthService authService, ILogger<AuthController> logger)
         {
-            _configuration = configuration;
+            _authService = authService;
+            _logger = logger;
         }
 
-        // POST: api/auth/login
+        /// <summary>
+        /// Authenticates a user and returns a JWT token.
+        /// </summary>
+        /// <param name="login">LoginModel containing username and password.</param>
+        /// <returns>JWT token.</returns>
         [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginModel login)
+        public async Task<IActionResult> Login([FromBody] LoginModel login)
         {
-            // Validate user credentials
-            // For simulation, accept any username/password
-            // Assign role based on username
-            string role = login.Username.Equals("admin", StringComparison.OrdinalIgnoreCase) ? "Admin" : "User";
-
-            var token = JwtTokenGenerator.GenerateToken(login.Username, role, _configuration);
-            return Ok(new { Token = token });
+            try
+            {
+                var token = await _authService.LoginAsync(login);
+                _logger.LogInformation("Successfully authenticated user: {Username}", login.Username);
+                return Ok(new { Token = token });
+            }
+            catch (BadRequestException ex)
+            {
+                _logger.LogWarning(ex, "Bad request during login for user: {Username}", login.Username);
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (ServiceException ex)
+            {
+                _logger.LogError(ex, "Service error during login for user: {Username}", login.Username);
+                return StatusCode(500, new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error during login for user: {Username}", login.Username);
+                return StatusCode(500, new { Message = "An unexpected error occurred during authentication." });
+            }
         }
     }
 }

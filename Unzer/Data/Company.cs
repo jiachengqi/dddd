@@ -14,8 +14,8 @@ namespace Unzer.Data
 
         [EmailAddress]
         public string Email { get; set; }
-
-        public ICollection<Owner> Owners { get; set; }
+        
+        public ICollection<Owner>? Owners { get; set; }
     }
 }
 

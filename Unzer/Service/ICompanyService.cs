@@ -10,6 +10,7 @@ namespace Unzer.Service
         Task<CompanyDTO> CreateCompanyAsync(CompanyDTO companyDto);
         Task UpdateCompanyAsync(int id, CompanyDTO companyDto);
         Task AddOwnersAsync(int companyId, IEnumerable<OwnerDTO> ownerDtos);
+        Task AddOwnerAsync(int companyId, OwnerDTO ownerDto);
         Task<bool> CheckSocialSecurityNumberAsync(string ssn);
         Task<OwnerDTO> GetOwnerByIdAsync(int companyId, int ownerId);
     }

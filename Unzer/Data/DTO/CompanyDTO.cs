@@ -7,7 +7,7 @@ namespace Unzer.Data.DTO
         public string Name { get; set; }
         public string Country { get; set; }
         public string Email { get; set; }
-        public ICollection<OwnerDTO> Owners { get; set; }
+        public ICollection<OwnerDTO>? Owners { get; set; }
     }
 }
 
