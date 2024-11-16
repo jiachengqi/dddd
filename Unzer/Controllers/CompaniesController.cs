@@ -24,10 +24,6 @@ namespace Unzer.Controllers
             _logger = logger;
         }
 
-        /// <summary>
-        /// Retrieves a list of all companies.
-        /// </summary>
-        /// <returns>List of CompanyDTO objects.</returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CompanyDTO>>> GetCompanies()
         {
@@ -51,11 +47,6 @@ namespace Unzer.Controllers
             }
         }
 
-        /// <summary>
-        /// Retrieves a specific company by ID.
-        /// </summary>
-        /// <param name="id">Company ID.</param>
-        /// <returns>CompanyDTO object.</returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<CompanyDTO>> GetCompany(int id)
         {
@@ -84,11 +75,6 @@ namespace Unzer.Controllers
             }
         }
 
-        /// <summary>
-        /// Creates a new company.
-        /// </summary>
-        /// <param name="companyDto">CompanyDTO object.</param>
-        /// <returns>Created CompanyDTO object.</returns>
         [HttpPost]
         public async Task<ActionResult<CompanyDTO>> CreateCompany([FromBody] CompanyDTO companyDto)
         {

@@ -28,7 +28,6 @@
     <None Remove="Controllers\" />
     <None Remove="Mapping\" />
     <None Remove="ExceptionHandling\" />
-    <None Remove="Util\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
@@ -38,6 +37,5 @@
     <Folder Include="Controllers\" />
     <Folder Include="Mapping\" />
     <Folder Include="ExceptionHandling\" />
-    <Folder Include="Util\" />
   </ItemGroup>
 </Project>

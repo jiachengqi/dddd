@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Unzer.Data;
 using Unzer.ExceptionHandling;
 using Unzer.Service;
-using Unzer.Util;
 
 namespace Unzer.Controllers
 {
@@ -20,11 +19,6 @@ namespace Unzer.Controllers
             _logger = logger;
         }
 
-        /// <summary>
-        /// Authenticates a user and returns a JWT token.
-        /// </summary>
-        /// <param name="login">LoginModel containing username and password.</param>
-        /// <returns>JWT token.</returns>
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel login)
         {
