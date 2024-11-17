@@ -136,8 +136,8 @@ TestResult.xml
 *_ReSharper.*
 
 # Ignore specific files or folders in the Unzer project
-Unzer/Unzer/bin/
-Unzer/Unzer/obj/
+Unzer/bin/
+Unzer//obj/
 Unzer/Unzer/Migrations/
 
 # Ignore database files
