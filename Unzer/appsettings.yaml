@@ -11,4 +11,4 @@ Logging:
 AllowedHosts: "*"
 
 ConnectionStrings:
-  DefaultConnection: "Data Source=/app/UnzerDB.db"
+  DefaultConnection: "Data Source=./UnzerDB.db"

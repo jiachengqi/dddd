@@ -10,7 +10,7 @@ using Unzer.Data;
 namespace Unzer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241117221319_InitialCreate")]
+    [Migration("20241117224117_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
