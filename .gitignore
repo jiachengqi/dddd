@@ -1,166 +1,125 @@
-# Build Folders (Objective-C projects)
+
 build/
 [Bb]in/
 [Oo]bj/
 [Oo]ut/
 TestResults/
 
-# Visual Studio Files
 .vs/
 *.user
 *.suo
 *.sln.docstates
 
-# Visual Studio Code Files
 .vscode/
 
-# Rider and Resharper
 .idea/
 *.sln.iml
 *.dotSettings.user
 _ReSharper*/
 
-# Mac Files
 *.DS_Store
 
-# Package Folders
 packages/
 *.nupkg
-# Uncomment if necessary
-#!packages/build/
-#!packages/repositories.config
 
-# NuGet Packages
 *.nupkg
 *.snupkg
 .nuget/
 
-# Logs
 *.log
 logs/
 
-# Temporary Files
 *.tmp
 *.temp
 tmp/
 
-# Web Output
 wwwroot/
 node_modules/
 bower_components/
 
-# Yarn
+
 yarn.lock
 
-# NPM
 package-lock.json
 
-# Docker
 docker-compose.override.yml
 docker-compose.*.yml
 
-# Environment Variables
 .env
 .env.*
 
-# User Secrets
+
 **/secrets.json
 
-# Configuration Files
 appsettings.Development.json
 appsettings.Local.json
 appsettings.Production.json
 appsettings.Staging.json
 appsettings.Test.json
 
-# Entity Framework Migrations
+
 Migrations/
 
-# Publish Profiles
 *.pubxml
 *.publish.xml
 
-# Backup & Report Files
 *.bak
 *.rpt
 
-# Visual Studio profiler
 *.psess
 *.vsp
 *.vspx
 *.sap
 
-# StyleCop
 StyleCopReport.xml
 
-# NUnit
 *.VisualState.xml
 TestResult.xml
 
-# NCrunch
 *.ncrunch*
 *NCrunchTemp*
 
-# MonoDevelop
 *.pidb
 *.userprefs
 
-# SQL Server Files
 *.mdf
 *.ldf
 *.ndf
 
-# Office Temp Files
 ~$*
 
-# Coverage Results
 *.coverage
 *.coveragexml
 
-# Crash Reports
 *.crash
 
-# Class Files
 *.class
 
-# Other
+
 *.cache
 *.pdb
 *.publishproj
 *.swp
 
-# Rider project files
-*.idea/
 
-# JetBrains Rider and ReSharper temp files
-*_ReSharper.*
-
-# Ignore specific files or folders in the Unzer project
 [Bb]in/
 [Oo]bj/
 Unzer/bin/
 Unzer//obj/
 Unzer/Unzer/Migrations/
 
-# Ignore database files
 *.db
 *.db-shm
 *.db-wal
 
-# Exclude certificates
 *.pfx
 
-# Exclude generated files
 Generated_Code/
 
-# Ignore test results
 TestResults/
 
-# Ignore code analysis results
 *.ruleset.testsettings
 
-# Ignore local history
 .localhistory
 
-# Ignore files with sensitive information
 **/*Secret*.*
