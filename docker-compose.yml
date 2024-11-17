@@ -12,3 +12,4 @@ services:
       ConnectionStrings__DefaultConnection: "Data Source=/app/UnzerDB.db"
     volumes:
       - ./Unzer/appsettings.yaml:/app/appsettings.yaml
+      - ./Unzer/UnzerDB.db:/app/UnzerDB.db
