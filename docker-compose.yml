@@ -1,17 +1,14 @@
-version: '3.4'
+version: '3.8'
 
 services:
-  api:
-    build: .
+  unzerapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "5001:80"
-    depends_on:
-      - db
-
-  db:
-    image: mcr.microsoft.com/mssql/server
     environment:
-      SA_PASSWORD: "Your_password123"
-      ACCEPT_EULA: "Y"
-    ports:
-      - "1433:1433"
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Data Source=/app/UnzerDB.db"
+    volumes:
+      - ./Unzer/appsettings.yaml:/app/appsettings.yaml

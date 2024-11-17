@@ -18,6 +18,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
+    <PackageReference Include="NetEscapades.Configuration.Yaml" Version="3.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,5 +38,12 @@
     <Folder Include="Controllers\" />
     <Folder Include="Mapping\" />
     <Folder Include="ExceptionHandling\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Condition="'$(ExcludeConfigFilesFromBuildOutput)'!='true'" Update="appsettings.yaml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
   </ItemGroup>
 </Project>

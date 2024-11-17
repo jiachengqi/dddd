@@ -138,9 +138,12 @@ TestResult.xml
 # Ignore specific files or folders in the Unzer project
 Unzer/Unzer/bin/
 Unzer/Unzer/obj/
+Unzer/Unzer/Migrations/
 
 # Ignore database files
 *.db
+*.db-shm
+*.db-wal
 
 # Exclude certificates
 *.pfx

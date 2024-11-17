@@ -1,8 +1,6 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Unzer.Data;
 using Unzer.ExceptionHandling;
@@ -10,6 +8,10 @@ using Unzer.Mapping;
 using Unzer.Repository;
 using Unzer.Service;
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
+                     .AddYamlFile("appsettings.yaml", optional: false, reloadOnChange: true)
+                     .AddEnvironmentVariables();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -70,10 +72,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.Urls.Add("http://*:80");
 app.MapControllers();
 
 app.Run();

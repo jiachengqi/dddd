@@ -1,0 +1,14 @@
+﻿Jwt:
+  Key: "YourSuperSecretKeyThatIsAtLeast32Chars!"
+  Issuer: "UnzerAPI"
+  Audience: "UnzerAPIUsers"
+
+Logging:
+  LogLevel:
+    Default: "Information"
+    Microsoft.AspNetCore: "Warning"
+
+AllowedHosts: "*"
+
+ConnectionStrings:
+  DefaultConnection: "Data Source=UnzerDB.db"
