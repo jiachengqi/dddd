@@ -1,5 +1,4 @@
-﻿
-using Unzer.ExceptionHandling;
+﻿using Unzer.ExceptionHandling;
 
 namespace Unzer.Service
 {

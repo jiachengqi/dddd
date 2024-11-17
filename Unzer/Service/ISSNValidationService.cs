@@ -1,5 +1,4 @@
-﻿
-namespace Unzer.Service
+﻿namespace Unzer.Service
 {
 	public interface ISSNValidationService
 	{

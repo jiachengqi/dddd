@@ -1,5 +1,4 @@
-﻿
-using AutoMapper;
+﻿using AutoMapper;
 using Unzer.Data;
 using Unzer.Data.DTO;
 using Unzer.ExceptionHandling;

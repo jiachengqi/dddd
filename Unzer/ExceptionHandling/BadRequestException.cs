@@ -1,5 +1,4 @@
-﻿
-namespace Unzer.ExceptionHandling
+﻿namespace Unzer.ExceptionHandling
 {
     [Serializable]
     public class BadRequestException : ApplicationExceptionBase

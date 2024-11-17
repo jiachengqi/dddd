@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Unzer.ExceptionHandling
+﻿namespace Unzer.ExceptionHandling
 {
     [Serializable]
     public class UnauthorizedException : ApplicationExceptionBase

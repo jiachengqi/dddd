@@ -1,5 +1,4 @@
-﻿
-using Unzer.Data;
+﻿using Unzer.Data;
 
 namespace Unzer.Repository
 {
