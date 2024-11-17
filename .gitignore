@@ -58,7 +58,6 @@ appsettings.Staging.json
 appsettings.Test.json
 
 
-Migrations/
 
 *.pubxml
 *.publish.xml
@@ -106,9 +105,8 @@ TestResult.xml
 [Oo]bj/
 Unzer/bin/
 Unzer//obj/
-Unzer/Unzer/Migrations/
 
-*.db
+
 *.db-shm
 *.db-wal
 
