@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
 using Unzer.Data;
 using Unzer.ExceptionHandling;
 
@@ -12,29 +7,23 @@ namespace Unzer.Repository
     public class CompanyRepository : ICompanyRepository
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<CompanyRepository> _logger;
 
-        public CompanyRepository(ApplicationDbContext context, ILogger<CompanyRepository> logger)
+        public CompanyRepository(ApplicationDbContext context)
         {
             _context = context;
-            _logger = logger;
         }
 
         public async Task<IEnumerable<Company>> GetCompaniesAsync()
         {
             try
             {
-                return await _context.Companies.Include(c => c.Owners).ToListAsync();
+                return await _context.Companies
+                    .Include(c => c.Owners)
+                    .ToListAsync();
             }
             catch (DbUpdateException ex)
             {
-                _logger.LogError(ex, "Database error fetching companies.");
-                throw new DataAccessException("A database error occurred while fetching the list of companies.", ex);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Unexpected error fetching companies.");
-                throw new DataAccessException("An unexpected error occurred while fetching the list of companies.", ex);
+                throw new ServiceException("error while retrieving companies.", ex);
             }
         }
 
@@ -48,25 +37,14 @@ namespace Unzer.Repository
 
                 if (company == null)
                 {
-                    _logger.LogWarning("Company with ID {Id} was not found.", id);
-                    throw new NotFoundException($"Company with ID {id} was not found.");
+                    throw new NotFoundException($"company with ID {id} not found.");
                 }
 
                 return company;
             }
-            catch (InvalidOperationException ex)
+            catch (DbUpdateException ex)
             {
-                _logger.LogError(ex, "Multiple records found when fetching company by ID: {Id}", id);
-                throw new DataAccessException("An unexpected error occurred while fetching the company.", ex);
-            }
-            catch (DataAccessException)
-            {
-                throw; // Rethrow already handled DataAccessException
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error fetching company by ID: {Id}", id);
-                throw new DataAccessException("An error occurred while fetching the company details.", ex);
+                throw new ServiceException("error occurred retrieving company.", ex);
             }
         }
 
@@ -74,18 +52,17 @@ namespace Unzer.Repository
         {
             try
             {
+                if (company.Owners == null)
+                {
+                    company.Owners = new List<Owner>();
+                }
+
                 _context.Companies.Add(company);
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException ex)
             {
-                _logger.LogError(ex, "Database update error while creating company: {CompanyName}", company.Name);
-                throw new DataAccessException("Failed to create the company. Please check the data and try again.", ex);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Unexpected error creating company: {CompanyName}", company.Name);
-                throw new DataAccessException("An unexpected error occurred while creating the company.", ex);
+                throw new ServiceException("error occurred creating company.", ex);
             }
         }
 
@@ -93,53 +70,79 @@ namespace Unzer.Repository
         {
             try
             {
-                _context.Entry(company).State = EntityState.Modified;
+                var existingCompany = await _context.Companies
+                    .Include(c => c.Owners)
+                    .FirstOrDefaultAsync(c => c.Id == company.Id);
+
+                if (existingCompany == null)
+                {
+                    throw new NotFoundException($"Company with ID {company.Id} not found.");
+                }
+
+                // Update company properties
+                existingCompany.Name = company.Name;
+                existingCompany.Country = company.Country;
+                existingCompany.Email = company.Email;
+
+                // Update owners
+                var updatedOwners = company.Owners ?? new List<Owner>();
+
+                // Remove owners that are no longer present
+                foreach (var existingOwner in existingCompany.Owners.ToList())
+                {
+                    if (!updatedOwners.Any(o => o.Id == existingOwner.Id))
+                    {
+                        _context.Owners.Remove(existingOwner);
+                    }
+                }
+
+                // Add or update owners
+                foreach (var updatedOwner in updatedOwners)
+                {
+                    var existingOwner = existingCompany.Owners
+                        .FirstOrDefault(o => o.Id == updatedOwner.Id);
+
+                    if (existingOwner == null)
+                    {
+                        // New owner, add to the collection
+                        existingCompany.Owners.Add(updatedOwner);
+                    }
+                    else
+                    {
+                        // Existing owner, update properties
+                        existingOwner.Name = updatedOwner.Name;
+                        existingOwner.SocialSecurityNumber = updatedOwner.SocialSecurityNumber;
+                    }
+                }
+
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                _logger.LogWarning(ex, "Concurrency conflict while updating company: {CompanyId}", company.Id);
-                throw new DataAccessException("The company data was modified by another process. Please refresh and try again.", ex);
+                throw new ConflictException("Company was updated by another user. Please reload and try again.", ex);
             }
             catch (DbUpdateException ex)
             {
-                _logger.LogError(ex, "Database update error while updating company: {CompanyId}", company.Id);
-                throw new DataAccessException("Failed to update the company. Please check the data and try again.", ex);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Unexpected error updating company: {CompanyId}", company.Id);
-                throw new DataAccessException("An unexpected error occurred while updating the company.", ex);
+                throw new ServiceException("Error while updating the company.", ex);
             }
         }
+
+
 
         public async Task AddOwnersAsync(int companyId, IEnumerable<Owner> owners)
         {
             try
             {
                 var company = await GetCompanyByIdAsync(companyId);
-
                 foreach (var owner in owners)
                 {
                     company.Owners.Add(owner);
                 }
-
                 await _context.SaveChangesAsync();
-            }
-            catch (NotFoundException ex)
-            {
-                _logger.LogWarning(ex, "Company with ID {CompanyId} was not found.", companyId);
-                throw; // Rethrow to preserve the original exception
             }
             catch (DbUpdateException ex)
             {
-                _logger.LogError(ex, "Database update error while adding owners to company: {CompanyId}", companyId);
-                throw new DataAccessException("Failed to add owners. Please check the data and try again.", ex);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Unexpected error adding owners to company: {CompanyId}", companyId);
-                throw new DataAccessException("An unexpected error occurred while adding owners.", ex);
+                throw new ServiceException("error while adding owners to the company.", ex);
             }
         }
 
@@ -151,20 +154,9 @@ namespace Unzer.Repository
                 company.Owners.Add(owner);
                 await _context.SaveChangesAsync();
             }
-            catch (NotFoundException ex)
-            {
-                _logger.LogWarning(ex, "Company with ID {CompanyId} was not found.", companyId);
-                throw; // Rethrow to preserve the original exception
-            }
             catch (DbUpdateException ex)
             {
-                _logger.LogError(ex, "Database update error while adding owner to company: {CompanyId}", companyId);
-                throw new DataAccessException("Failed to add the owner. Please check the data and try again.", ex);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Unexpected error adding owner to company: {CompanyId}", companyId);
-                throw new DataAccessException("An unexpected error occurred while adding the owner.", ex);
+                throw new ServiceException("An error occurred while adding an owner to the company.", ex);
             }
         }
 
@@ -177,20 +169,14 @@ namespace Unzer.Repository
 
                 if (owner == null)
                 {
-                    _logger.LogWarning("Owner with ID {OwnerId} not found for company ID {CompanyId}.", ownerId, companyId);
-                    throw new NotFoundException($"Owner with ID {ownerId} not found for company ID {companyId}.");
+                    throw new NotFoundException($"Owner with ID {ownerId} not found in company {companyId}.");
                 }
 
                 return owner;
             }
-            catch (NotFoundException)
+            catch (DbUpdateException ex)
             {
-                throw; // Rethrow to preserve the original exception
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error fetching owner by ID: {OwnerId} for company ID: {CompanyId}", ownerId, companyId);
-                throw new DataAccessException("An error occurred while fetching the owner details.", ex);
+                throw new ServiceException("An error occurred while retrieving the owner.", ex);
             }
         }
     }

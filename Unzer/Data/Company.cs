@@ -1,10 +1,13 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Unzer.Data
 {
     public class Company
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
@@ -15,7 +18,7 @@ namespace Unzer.Data
         [EmailAddress]
         public string Email { get; set; }
         
-        public ICollection<Owner>? Owners { get; set; }
+        public ICollection<Owner> Owners { get; set; }
     }
 }
 

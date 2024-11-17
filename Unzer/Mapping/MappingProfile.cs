@@ -9,8 +9,8 @@ namespace Unzer.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<CompanyDTO, Company>().ReverseMap();
-            CreateMap<OwnerDTO, Owner>().ReverseMap();
+            CreateMap<Company, CompanyDTO>().ReverseMap();
+            CreateMap<Owner, OwnerDTO>().ReverseMap();
         }
     }
 }

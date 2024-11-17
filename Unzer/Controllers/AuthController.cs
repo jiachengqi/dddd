@@ -20,29 +20,11 @@ namespace Unzer.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel login)
+        public IActionResult Login([FromBody] LoginModel login)
         {
-            try
-            {
-                var token = await _authService.LoginAsync(login);
-                _logger.LogInformation("Successfully authenticated user: {Username}", login.Username);
-                return Ok(new { Token = token });
-            }
-            catch (BadRequestException ex)
-            {
-                _logger.LogWarning(ex, "Bad request during login for user: {Username}", login.Username);
-                return BadRequest(new { Message = ex.Message });
-            }
-            catch (ServiceException ex)
-            {
-                _logger.LogError(ex, "Service error during login for user: {Username}", login.Username);
-                return StatusCode(500, new { Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Unexpected error during login for user: {Username}", login.Username);
-                return StatusCode(500, new { Message = "An unexpected error occurred during authentication." });
-            }
+            var token = _authService.Login(login);
+            _logger.LogInformation("authenticated user: {Username}", login.Username);
+            return Ok(new { Token = token });
         }
     }
 }

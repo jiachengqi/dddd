@@ -23,38 +23,23 @@ namespace Unzer.ExceptionHandling
             {
                 await _next(context);
             }
+            catch (ApplicationExceptionBase ex)
+            {
+                _logger.LogError(ex, "An application exception occurred: {Message}", ex.Message);
+                await HandleExceptionAsync(context, ex.StatusCode, ex.Message, ex.GetType().Name);
+            }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An exception occurred: {Message}", ex.Message);
-                await HandleExceptionAsync(context, ex);
+                _logger.LogError(ex, "An unexpected exception occurred: {Message}", ex.Message);
+                await HandleExceptionAsync(context, StatusCodes.Status500InternalServerError, "An unexpected error occurred.", "InternalServerError");
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private static Task HandleExceptionAsync(HttpContext context, int statusCode, string errorMessage, string errorType)
         {
-            int statusCode;
-            string errorMessage;
-            string errorType = exception.GetType().Name;
-
-            if (exception is ApplicationExceptionBase customException)
-            {
-                // Use status code from the custom exception
-                statusCode = customException.StatusCode;
-                errorMessage = customException.Message;
-            }
-            else
-            {
-                // Fallback for unhandled exceptions
-                statusCode = (int)HttpStatusCode.InternalServerError;
-                errorMessage = "An unexpected error occurred. Please try again later.";
-                Console.WriteLine($"Unhandled exception: {exception.GetType().Name}");
-            }
-
-            // Set the response status code and content type
             context.Response.StatusCode = statusCode;
             context.Response.ContentType = "application/json";
 
-            // Create a structured error response
             var errorResponse = new
             {
                 StatusCode = statusCode,
@@ -63,11 +48,7 @@ namespace Unzer.ExceptionHandling
                 TraceId = context.TraceIdentifier
             };
 
-            // Serialize the error response to JSON
             var errorJson = JsonSerializer.Serialize(errorResponse);
-
-            // Log the structured error response for audit and monitoring
-            Console.WriteLine($"Error Response: {errorJson}");
 
             return context.Response.WriteAsync(errorJson);
         }
