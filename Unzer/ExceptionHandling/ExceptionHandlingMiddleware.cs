@@ -1,8 +1,4 @@
-﻿using System;
-using System.Net;
-using System.Text.Json;
-using Microsoft.Extensions.Logging;
-using Unzer.ExceptionHandling;
+﻿using System.Text.Json;
 
 namespace Unzer.ExceptionHandling
 {
@@ -25,13 +21,13 @@ namespace Unzer.ExceptionHandling
             }
             catch (ApplicationExceptionBase ex)
             {
-                _logger.LogError(ex, "An application exception occurred: {Message}", ex.Message);
+                _logger.LogError(ex, "application exception: {Message}", ex.Message);
                 await HandleExceptionAsync(context, ex.StatusCode, ex.Message, ex.GetType().Name);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An unexpected exception occurred: {Message}", ex.Message);
-                await HandleExceptionAsync(context, StatusCodes.Status500InternalServerError, "An unexpected error occurred.", "InternalServerError");
+                _logger.LogError(ex, "unexpected exception: {Message}", ex.Message);
+                await HandleExceptionAsync(context, StatusCodes.Status500InternalServerError, "unexpected error", "InternalServerError");
             }
         }
 

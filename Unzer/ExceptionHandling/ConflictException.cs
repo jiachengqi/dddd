@@ -1,5 +1,4 @@
-﻿using System;
-
+﻿
 namespace Unzer.ExceptionHandling
 {
     [Serializable]

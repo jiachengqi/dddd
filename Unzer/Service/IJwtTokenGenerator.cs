@@ -1,5 +1,4 @@
-﻿using System;
-namespace Unzer.Service
+﻿namespace Unzer.Service
 {
 	public interface IJwtTokenGenerator
 	{

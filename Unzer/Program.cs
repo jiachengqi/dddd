@@ -64,7 +64,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Unzer API V1");
-        c.RoutePrefix = "swagger"; // This ensures Swagger UI is at /swagger/index.html
+        c.RoutePrefix = "swagger";
     });
 }
 

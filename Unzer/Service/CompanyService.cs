@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿
 using AutoMapper;
-using Microsoft.Extensions.Logging;
 using Unzer.Data;
 using Unzer.Data.DTO;
 using Unzer.ExceptionHandling;
 using Unzer.Repository;
-using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
 namespace Unzer.Service

@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Unzer.Data;
+﻿
 using Unzer.ExceptionHandling;
 
 namespace Unzer.Service
@@ -17,7 +15,7 @@ namespace Unzer.Service
             {
                 if (string.IsNullOrWhiteSpace(ssn))
                 {
-                    throw new BadRequestException("SSN cannot be empty.");
+                    throw new BadRequestException("SSN cannot be empty");
                 }
 
                 return _random.Next(0, 2) == 0;

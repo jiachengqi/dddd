@@ -1,4 +1,4 @@
-﻿using System;
+﻿
 namespace Unzer.Service
 {
 	public interface ISSNValidationService

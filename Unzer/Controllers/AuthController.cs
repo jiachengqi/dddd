@@ -1,7 +1,5 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Unzer.Data;
-using Unzer.ExceptionHandling;
 using Unzer.Service;
 
 namespace Unzer.Controllers

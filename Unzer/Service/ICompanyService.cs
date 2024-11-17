@@ -1,5 +1,4 @@
-﻿using System;
-using Unzer.Data.DTO;
+﻿using Unzer.Data.DTO;
 
 namespace Unzer.Service
 {
@@ -15,4 +14,3 @@ namespace Unzer.Service
         Task<OwnerDTO> GetOwnerByIdAsync(int companyId, int ownerId);
     }
 }
-

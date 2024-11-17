@@ -33,7 +33,7 @@ namespace Unzer.Repository
             {
                 var company = await _context.Companies
                     .Include(c => c.Owners)
-                    .FirstOrDefaultAsync(c => c.Id == id);
+                    .SingleOrDefaultAsync(c => c.Id == id);
 
                 if (company == null)
                 {
@@ -72,22 +72,19 @@ namespace Unzer.Repository
             {
                 var existingCompany = await _context.Companies
                     .Include(c => c.Owners)
-                    .FirstOrDefaultAsync(c => c.Id == company.Id);
+                    .SingleOrDefaultAsync(c => c.Id == company.Id);
 
                 if (existingCompany == null)
                 {
-                    throw new NotFoundException($"Company with ID {company.Id} not found.");
+                    throw new NotFoundException($"company with ID {company.Id} not found.");
                 }
 
-                // Update company properties
                 existingCompany.Name = company.Name;
                 existingCompany.Country = company.Country;
                 existingCompany.Email = company.Email;
 
-                // Update owners
                 var updatedOwners = company.Owners ?? new List<Owner>();
 
-                // Remove owners that are no longer present
                 foreach (var existingOwner in existingCompany.Owners.ToList())
                 {
                     if (!updatedOwners.Any(o => o.Id == existingOwner.Id))
@@ -96,7 +93,6 @@ namespace Unzer.Repository
                     }
                 }
 
-                // Add or update owners
                 foreach (var updatedOwner in updatedOwners)
                 {
                     var existingOwner = existingCompany.Owners
@@ -104,14 +100,12 @@ namespace Unzer.Repository
 
                     if (existingOwner == null)
                     {
-                        // New owner, add to the collection
+                        if (_context.Entry(updatedOwner).State == EntityState.Detached)
+                        {
+                            _context.Attach(updatedOwner);
+                        }
+
                         existingCompany.Owners.Add(updatedOwner);
-                    }
-                    else
-                    {
-                        // Existing owner, update properties
-                        existingOwner.Name = updatedOwner.Name;
-                        existingOwner.SocialSecurityNumber = updatedOwner.SocialSecurityNumber;
                     }
                 }
 
@@ -165,7 +159,7 @@ namespace Unzer.Repository
             try
             {
                 var owner = await _context.Owners
-                    .FirstOrDefaultAsync(o => o.Id == ownerId && o.CompanyId == companyId);
+                    .SingleOrDefaultAsync(o => o.Id == ownerId && o.CompanyId == companyId);
 
                 if (owner == null)
                 {
@@ -176,7 +170,7 @@ namespace Unzer.Repository
             }
             catch (DbUpdateException ex)
             {
-                throw new ServiceException("An error occurred while retrieving the owner.", ex);
+                throw new ServiceException("error while retrieving the owner.", ex);
             }
         }
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using Unzer.Data;
+﻿using Unzer.Data;
 
 namespace Unzer.Service
 {
